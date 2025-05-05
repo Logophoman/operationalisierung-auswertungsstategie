@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forschungsmethoden C - Sitzung 5/6: Operationalisierung & Auswertungsstrategie</title>
+    <style>
+        /* --- Root Variables and Basic Styles (Angelehnt an Vorwoche) --- */
+        :root {
+            --uni-hohenheim-blue: #003560;
+            --uni-hohenheim-lightblue: #0073a0;
+            --text-color: #333;
+            --heading-color: var(--uni-hohenheim-blue);
+            --background-color: #f8f9fa;
+            --box-background: #ffffff;
+            --border-color: #dee2e6;
+            --accent-color: #e85f3e;
+            /* Hohenheim Orange/Red accent */
+            --highlight-bg: #fffadd;
+            --highlight-border: #f1c40f;
+            --task-bg: #eef7ff;
+            --task-border: #bce0fd;
+            --pitfall-bg: #fff0f0;
+            /* Light red background for pitfalls */
+            --pitfall-border: #f5c6cb;
+            --pitfall-color: #721c24;
+            --animation-duration-base: 0.6s;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 20px auto;
+            background-color: var(--box-background);
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- Header Styles (wie Vorwoche) --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--uni-hohenheim-blue);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        header .course-info h1 {
+            margin: 0;
+            font-size: 1.8em;
+            color: var(--heading-color);
+        }
+
+        header .course-info p {
+            margin: 5px 0 0;
+            font-size: 0.95em;
+            color: #555;
+        }
+
+        header .uni-logo img {
+            max-height: 60px;
+            width: auto;
+        }
+
+        /* --- Headings and Text Styles (wie Vorwoche) --- */
+        h2,
+        h3 {
+            color: var(--heading-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            border-bottom: none;
+            margin-top: 30px;
+            font-size: 1.3em;
+            color: var(--uni-hohenheim-lightblue);
+        }
+
+        h4 {
+            color: var(--uni-hohenheim-blue);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-size: 1.15em;
+        }
+
+        p,
+        ul,
+        li {
+            margin-bottom: 1em;
+        }
+
+        ul {
+            padding-left: 25px;
+            list-style-type: square;
+        }
+
+        li::marker {
+            color: var(--uni-hohenheim-lightblue);
+        }
+
+        strong {
+            color: var(--uni-hohenheim-blue);
+            font-weight: 600;
+        }
+
+        code {
+            background-color: #e9ecef;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--uni-hohenheim-lightblue);
+            padding-left: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #555;
+            background-color: #f8f9fa;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        blockquote footer {
+            font-style: normal;
+            font-size: 0.9em;
+            text-align: right;
+            margin-top: 5px;
+            color: #6c757d;
+        }
+
+        /* --- Box Styles (wie Vorwoche) --- */
+        .task-box,
+        .info-box,
+        .group-guidance-box,
+        .pitfall-box {
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+            border: 1px solid;
+            border-left-width: 5px;
+        }
+
+        .task-box {
+            background-color: var(--task-bg);
+            border-color: var(--task-border);
+            border-left-color: var(--uni-hohenheim-blue);
+        }
+
+        .task-box h2 {
+            margin-top: 0;
+            border-bottom: none;
+            color: var(--uni-hohenheim-blue);
+        }
+
+        .info-box {
+            background-color: var(--highlight-bg);
+            border-color: var(--highlight-border);
+            border-left-color: var(--highlight-border);
+            padding: 15px;
+        }
+
+        .info-box strong {
+            color: #c89c0c;
+        }
+
+        .group-guidance-box {
+            background-color: #f0f8ff;
+            border-color: #cce5ff;
+            border-left-color: var(--uni-hohenheim-lightblue);
+            margin-top: 20px;
+        }
+
+        .group-guidance-box h4 {
+            margin-top: 0;
+            border-bottom: 1px dotted var(--uni-hohenheim-lightblue);
+            padding-bottom: 5px;
+            color: var(--uni-hohenheim-lightblue);
+        }
+
+        .pitfall-box {
+            background-color: var(--pitfall-bg);
+            border-color: var(--pitfall-border);
+            border-left-color: var(--accent-color);
+            color: var(--pitfall-color);
+        }
+
+        .pitfall-box h3 {
+            color: var(--pitfall-color);
+            border-bottom: none;
+            margin-top: 0;
+        }
+
+        .pitfall-box strong {
+            color: var(--accent-color);
+        }
+
+        /* --- Footer Styles (wie Vorwoche) --- */
+        footer.page-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+
+        /* --- Base Animation: FadeInUp (wie Vorwoche) --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animated-on-scroll {
+            opacity: 0;
+            transition: opacity var(--animation-duration-base) ease-out;
+        }
+
+        .animated-on-scroll.is-visible {
+            opacity: 1;
+            animation: fadeInUp var(--animation-duration-base) ease-out forwards;
+        }
+
+        /* --- Table Style für Beispiele --- */
+        table.evaluation-example {
+            width: 80%;
+            /* Adjust width as needed */
+            margin: 20px auto;
+            border-collapse: collapse;
+            border: 1px solid var(--border-color);
+        }
+
+        table.evaluation-example th,
+        table.evaluation-example td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        table.evaluation-example th {
+            background-color: #f2f2f2;
+            color: var(--heading-color);
+            font-weight: 600;
+        }
+
+        table.evaluation-example caption {
+            caption-side: bottom;
+            font-size: 0.9em;
+            color: #6c757d;
+            padding-top: 8px;
+            text-align: center;
+        }
+
+        /* --- Responsive adjustments (wie Vorwoche) --- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            header .uni-logo {
+                margin-top: 15px;
+                align-self: center;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            h3 {
+                font-size: 1.2em;
+            }
+
+            table.evaluation-example {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="course-info">
+                <h1>Forschungsmethoden C</h1>
+                <p>Universität Hohenheim | Sommersemester 2025<br>
+                    Andreas Reich | 5. & 6. Sitzung: Operationalisierung & Auswertungsstrategie</p>
+            </div>
+            <div class="uni-logo">
+                <img src="logo.png" alt="Logo Universität Hohenheim">
+            </div>
+        </header>
+
+        <main>
+            <section id="introduction" class="animated-on-scroll">
+                <h2>Vom Was zum Wie: Operationalisierung & Auswertungsstrategie</h2>
+                <p>Herzlich willkommen zu den nächsten Sitzungen! Nachdem ihr letzte Woche eure Untersuchungsdimensionen
+                    und
+                    zentralen Begriffe präzise definiert habt (das <strong>WAS</strong>), widmen wir uns nun über die
+                    nächsten <strong>drei Wochen</strong> der Frage, <strong>WIE</strong> ihr diese Konzepte messen und
+                    die daraus resultierenden Daten auswerten wollt.</p>
+                <p>Wir kombinieren zwei eng miteinander verknüpfte Schritte:</p>
+                <ol>
+                    <li><strong>Operationalisierung:</strong> Die Übersetzung eurer definierten Konzepte und Dimensionen
+                        in konkrete Messanweisungen – also der Entwurf eures <strong>Untersuchungsinstruments</strong>
+                        (Fragebogen-Items, Codebuch-Kategorien, experimentelle Stimuli).</li>
+                    <li><strong>Auswertungsstrategie:</strong> Die Planung, wie ihr die mit diesem Instrument erhobenen
+                        Daten analysieren werdet, um eure Forschungsfragen zu beantworten und Hypothesen zu testen.</li>
+                </ol>
+                <p><strong>Warum diese Kombination?</strong> Die Planung der Auswertung ist ein wichtiger Realitätscheck
+                    für eure Operationalisierung. Ihr überprüft damit, ob euer Messinstrument (Fragebogen, Codebuch
+                    etc.) überhaupt Daten liefert, die sich mit den geplanten (und im Rahmen dieses Kurses verfügbaren)
+                    Methoden auswerten lassen und ob diese Auswertung eure Fragen beantwortet. Dieser iterative Prozess
+                    hilft, Probleme frühzeitig zu erkennen und das Instrument zu optimieren, <strong>bevor</strong> ihr
+                    in den Pretest geht.</p>
+            </section>
+
+            <section id="task-definition" class="animated-on-scroll">
+                <div class="task-box">
+
+                    <h2>Aufgaben 5 & 6: Instrumentenentwurf und Auswertungsstrategie</h2>
+                    <p>Über die nächsten drei Wochen entwickelt ihr euer Messinstrument und plant dessen Auswertung in
+                        zwei Schritten mit jeweils 1,5 Wochen Bearbeitungszeit.</p>
+
+                    <div class="info-box">
+                        <strong>Wichtiger Hinweis:</strong> Ihr bekommt für diese 2 Aufgaben 3 Wochen zeit. Das bedeutet
+                        am nächsten Montag muss KEINE Abgabe gemacht werden.
+                        Aber die beiden Aufgaben profitieren davon wenn man z.T. parallell arbeitet. Die zwei
+                        Verantwortlichen sprechen sich ab ob die Gruppe überhaupt parallell arbeiten will oder ob ihr
+                        einfach wie bisher sequenziell arbeitet.
+                        Wir werden uns trotzdem nächste Woche treffen und die Ganze Sitzung Zeit haben zu diskutieren &
+                        geminsam zu arbeiten.
+                    </div>
+
+                    <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 20px 0;">
+
+                    <h3>Aufgabe 5 (Nächste Woche): Erster Entwurf des Untersuchungsinstruments</h3>
+                    <p>Diese Woche liegt der Fokus auf der <strong>Operationalisierung</strong> eurer in Aufgabe 4
+                        definierten Konzepte und Dimensionen.</p>
+                    <ul>
+                        <li>Übersetzt jede Dimension in konkrete <strong>Indikatoren</strong> (Fragebogen-Items,
+                            Codebuch-Kategorien/Ausprägungen, Stimulus-Merkmale).</li>
+                        <li>Trefft <strong>Messentscheidungen</strong> (Skalentypen, Formulierungen, Codieranweisungen,
+                            Stimulus-Details).</li>
+                        <li>Erstellt einen <strong>ersten Entwurf eures Instruments</strong> mit einem praxistauglichen
+                            Layout (z.B. Rohentwurf in SoSci Survey, Codebuch-Tabelle, Stimulus-Mockup). <strong>Dieser
+                                Entwurf ist Teil der Abgabe!</strong></li>
+                        <li><strong>Begründet eure Operationalisierungsentscheidungen</strong> schriftlich und
+                            wissenschaftlich (ca. 3-6 Seiten): Warum diese Indikatoren? Warum diese Messvorschriften?
+                            Quellen für übernommene Instrumente?</li>
+                        <li><strong>Testet euer Instrument informell selbst!</strong> Ist es verständlich? Anwendbar?
+                            Realistisch?</li>
+                    </ul>
+
+                    <h4>Checkliste für Aufgabe 5:</h4>
+                    <ul class="checklist" id="checklist-task5">
+                        <li><label><input type="checkbox"><span>Instrumentenentwurf (Layout) erstellt?</span></label>
+                        </li>
+                        <li><label><input type="checkbox"><span>Jede Dimension aus Aufg. 4 operationalisiert
+                                    (Indikatoren)?</span></label></li>
+                        <li><label><input type="checkbox"><span>Messentscheidungen getroffen (Skalenniveau
+                                    etc.)?</span></label></li>
+                        <li><label><input type="checkbox"><span>Operationalisierung schriftlich begründet (3-6
+                                    Seiten)?</span></label></li>
+                        <li><label><input type="checkbox"><span>Quellen für übernommene Instrumente
+                                    genannt?</span></label></li>
+                        <li><label><input type="checkbox"><span>Instrument informell selbst getestet?</span></label>
+                        </li>
+                    </ul>
+
+                    <ul>
+                        <li><strong>Abgabe Aufgabe 5:</strong> Ladet den <strong>Instrumenten-Entwurf UND die
+                                schriftliche Begründung</strong> bis <strong>Montagabend Übernächste Woche, 20:00
+                                Uhr</strong> auf ILIAS
+                            hoch.</li>
+                        <li><strong>Präsentation Aufgabe 5:</strong> Bereitet eine Präsentation eures
+                            Instrumenten-Entwurfs und eurer Begründungen für die Sitzung am <strong>Mittwoch (Sitzung
+                                6)</strong> vor (Folien bis Mittwoch hochladen).</li>
+                    </ul>
+
+                    <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 20px 0;">
+
+                    <h3>Aufgabe 6 (Übernächste Woche): Auswertungsstrategie</h3>
+                    <p>Aufbauend auf eurem Instrumentenentwurf (und dem Feedback aus Sitzung 6) formuliert ihr
+                        übernächste
+                        Woche die <strong>Auswertungsstrategie</strong>.</p>
+                    <ul>
+                        <li>Ordnet jeder Forschungsfrage/Hypothese die Variablen aus eurem (ggf. überarbeiteten)
+                            Instrument zu (uV/aV klären).</li>
+                        <li>Plant Variablen-/Ausprägungs-Zusammenfassungen (Indexbildung? Gruppenbildung?). Begründet
+                            diese Schritte.</li>
+                        <li>Legt fest, welche <strong>statistischen Maße</strong> ihr nutzen wollt (Häufigkeiten,
+                            Mittelwerte). Begründet die Wahl im Hinblick auf das Skalenniveau.</li>
+                        <li>Skizziert die <strong>Ergebnisdarstellung</strong> (Tabellen-/Grafik-Entwürfe) und
+                            erläutert, wie diese die RQ/Hypothese beantworten.</li>
+                        <li>Führt einen <strong>Plausibilitätscheck</strong> durch: Ist die geplante Auswertung mit dem
+                            Instrument und der geplanten Stichprobe realistisch und zielführend?</li>
+                        <li>Dokumentiert eure Auswertungsstrategie schriftlich & wissenschaftlich (ca. 5-10 Seiten -
+                            diese Woche habt ihr noch mehr Freiraum).</li>
+                    </ul>
+
+                    <h4>Checkliste für Aufgabe 6:</h4>
+                    <ul class="checklist" id="checklist-task6">
+                        <li><label><input type="checkbox"><span>Auswertungsstrategie pro RQ/Hypothese
+                                    formuliert?</span></label></li>
+                        <li><label><input type="checkbox"><span>Variablen zugeordnet (uV/aV klar)?</span></label></li>
+                        <li><label><input type="checkbox"><span>Indexbildung/Gruppierung geplant und
+                                    begründet?</span></label></li>
+                        <li><label><input type="checkbox"><span>Statistische Maße geplant und begründet?</span></label>
+                        </li>
+                        <li><label><input type="checkbox"><span>Darstellungsform (Tabellen/Grafiken) skizziert und
+                                    erläutert?</span></label></li>
+                        <li><label><input type="checkbox"><span>Plausibilitätscheck erfolgt?</span></label></li>
+                        <li><label><input type="checkbox"><span>Schriftliche Dokumentation der Strategie (5-10 Seiten)
+                                    erstellt?</span></label></li>
+                    </ul>
+
+                    <ul>
+                        <li><strong>Abgabe Aufgabe 6:</strong> Ladet die <strong>Dokumentation eurer
+                                Auswertungsstrategie</strong> bis <strong>Montagabend (in 3 Wochen), 20:00 Uhr</strong>
+                            auf ILIAS hoch.</li>
+                        <li><strong>Präsentation Aufgabe 6:</strong> Bereitet eine Präsentation eurer
+                            Auswertungsstrategie für die Sitzung am <strong>Mittwoch (Sitzung 7)</strong> vor (Folien
+                            bis Mittwoch hochladen).</li>
+                    </ul>
+                    <div class="info-box">
+                        <strong>Wichtiger Hinweis:</strong> Auch wenn die Aufgaben getrennt sind, denkt daran, dass die
+                        Auswertungsplanung (Aufg. 6) direkt auf der Operationalisierung (Aufg. 5) aufbaut. Es kann
+                        sinnvoll sein, schon bei Aufgabe 5 über die spätere Auswertung nachzudenken und umgekehrt kann
+                        die Planung der Auswertung in Aufgabe 6 dazu führen, dass ihr euer Instrument aus Aufgabe 5
+                        nochmal leicht anpassen müsst.
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================================== -->
+            <!--   NEUE SEKTION: MESS- UND SKALENNIVEAUS                     -->
+            <!-- =========================================================== -->
+            <section id="scales-theory" class="animated-on-scroll">
+                <h2>Mess- und Skalenniveaus: Die Grundlage der Auswertung</h2>
+                <p>Die Art und Weise, wie ihr eure Variablen operationalisiert, bestimmt deren <strong>Mess- oder
+                        Skalenniveau</strong>. Dieses Niveau legt fest, wie viel Information in den Messwerten steckt
+                    und – ganz entscheidend für eure Auswertungsstrategie – welche <strong>mathematischen Operationen
+                        und statistischen Verfahren</strong> damit sinnvoll durchgeführt werden können.</p>
+                <p>Man unterscheidet üblicherweise vier Hauptniveaus, die hierarchisch aufeinander aufbauen: Jedes
+                    höhere Niveau besitzt alle Eigenschaften der darunterliegenden Niveaus und zusätzlich eine weitere.
+                </p>
+
+                <!-- Interaktive SVG zu Skalenniveaus -->
+                <div id="scales-interactive-container" style="text-align: center; margin: 30px 0;">
+                    <svg id="scales-svg" viewBox="0 0 600 550" xmlns="http://www.w3.org/2000/svg"
+                        style="max-width: 600px; font-family: var(--font-family); display: inline-block;">
+                        <style>
+                            #scales-svg .scale-box {
+                                fill: var(--box-background);
+                                stroke: var(--uni-hohenheim-lightblue);
+                                stroke-width: 1.5;
+                                rx: 5;
+                                ry: 5;
+                                cursor: pointer;
+                                transition: fill 0.3s ease, stroke-width 0.3s ease;
+                                opacity: 0;
+                                /* Start hidden */
+                                transform: translateY(20px);
+                                /* Start slightly lower */
+                                transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+                            }
+
+                            #scales-svg .scale-box.visible {
+                                opacity: 1;
+                                transform: translateY(0);
+                            }
+
+                            #scales-svg .scale-box:hover:not(.active) {
+                                fill: #eef7ff;
+                                stroke-width: 2;
+                            }
+
+                            #scales-svg .scale-box.active {
+                                stroke: var(--accent-color);
+                                stroke-width: 2.5;
+                                fill: #fffcf5;
+                            }
+
+                            #scales-svg .scale-name {
+                                font-size: 16px;
+                                font-weight: bold;
+                                fill: var(--uni-hohenheim-blue);
+                                text-anchor: middle;
+                                pointer-events: none;
+                            }
+
+                            #scales-svg .scale-info {
+                                font-size: 12px;
+                                fill: var(--text-color);
+                                text-anchor: middle;
+                                pointer-events: none;
+                            }
+
+                            #scales-svg .scale-info tspan {
+                                font-size: 11px;
+                            }
+
+                            #scales-svg .hierarchy-arrow {
+                                stroke: var(--uni-hohenheim-lightblue);
+                                stroke-width: 2;
+                                marker-end: url(#arrowhead-scales);
+                                opacity: 0;
+                                transition: opacity 0.5s ease-in 0.3s;
+                                /* Delay arrow appearance */
+                            }
+
+                            #scales-svg .hierarchy-arrow.visible {
+                                opacity: 1;
+                            }
+
+                            /* Operations List */
+                            #scales-operations-list {
+                                list-style: none;
+                                padding-left: 0;
+                                margin-top: 20px;
+                                font-size: 0.95em;
+                            }
+
+                            #scales-operations-list li {
+                                margin-bottom: 8px;
+                                opacity: 0.3;
+                                /* Start faded */
+                                transition: opacity 0.5s ease;
+                                padding: 5px;
+                                border-radius: 3px;
+                            }
+
+                            #scales-operations-list li strong {
+                                color: var(--uni-hohenheim-blue);
+                            }
+
+                            #scales-operations-list li.active-op {
+                                opacity: 1;
+                                background-color: var(--highlight-bg);
+                                font-weight: 500;
+                            }
+
+                            #scales-operations-list li.active-op strong {
+                                color: var(--accent-color);
+                            }
+                        </style>
+                        <defs>
+                            <marker id="arrowhead-scales" markerWidth="8" markerHeight="6" refX="8" refY="3"
+                                orient="auto">
+                                <path d="M0,0 L8,3 L0,6 Z" fill="var(--uni-hohenheim-lightblue)" />
+                            </marker>
+                        </defs>
+
+                        <!-- Skalenniveaus als Stapel -->
+                        <g id="nominal-level">
+                            <rect id="nominal-box" class="scale-box" x="150" y="430" width="300" height="80" />
+                            <text class="scale-name" x="300" y="455">Nominalskala</text>
+                            <text class="scale-info" x="300" y="480">
+                                <tspan x="300" dy="0em">Eigenschaft: Gleichheit/Verschiedenheit</tspan>
+                                <tspan x="300" dy="1.2em">(Kategorien ohne Rangfolge)</tspan>
+                            </text>
+                        </g>
+
+                        <g id="ordinal-level">
+                            <rect id="ordinal-box" class="scale-box" x="150" y="320" width="300" height="80" />
+                            <text class="scale-name" x="300" y="345">Ordinalskala</text>
+                            <text class="scale-info" x="300" y="370">
+                                <tspan x="300" dy="0em">Eigenschaft: + Ordnung</tspan>
+                                <tspan x="300" dy="1.2em">(Kategorien mit Rangfolge, Abstände undef.)</tspan>
+                            </text>
+                            <line id="arrow-nom-ord" class="hierarchy-arrow" x1="300" y1="430" x2="300" y2="400" />
+                        </g>
+
+                        <g id="metric-level">
+                            <rect id="metric-box" class="scale-box" x="150" y="160" width="300" height="130" />
+                            <text class="scale-name" x="300" y="185">Metrische Skala</text>
+                            <text class="scale-info" x="300" y="205">
+                                <tspan x="300" dy="0em">Eigenschaft: + Gleiche Intervalle</tspan>
+                                <tspan x="300" dy="1.2em">(Abstände zwischen Werten sind gleich)</tspan>
+                                <tspan x="300" dy="1.8em" style="font-weight:bold;">Intervallskala:</tspan>
+                                <tspan x="300" dy="1.2em">Kein absoluter Nullpunkt (z.B. °C)</tspan>
+                                <tspan x="300" dy="1.8em" style="font-weight:bold;">Ratioskala (Verhältnisskala):
+                                </tspan>
+                                <tspan x="300" dy="1.2em">Absoluter Nullpunkt vorhanden (z.B. Alter)</tspan>
+                            </text>
+                            <line id="arrow-ord-met" class="hierarchy-arrow" x1="300" y1="320" x2="300" y2="290" />
+                        </g>
+
+                        <!-- Quasi-Metrisch als Anmerkung -->
+                        <g id="quasi-metric-level">
+                            <rect id="quasi-metric-box" class="scale-box" x="150" y="50" width="300" height="80"
+                                style="stroke-dasharray: 5, 3; stroke: var(--accent-color);" />
+                            <text class="scale-name" style="fill: var(--accent-color);" x="300"
+                                y="75">Quasi-Metrisch</text>
+                            <text class="scale-info" x="300" y="95">
+                                <tspan x="300" dy="0em">(Streng genommen ordinal, oft wie metrisch behandelt)</tspan>
+                                <tspan x="300" dy="1.2em">Annahme: Gleiche Abstände zw. Skalenpunkten</tspan>
+                                <tspan x="300" dy="1.2em">(z.B. Likert-Skalen 1-5)</tspan>
+                            </text>
+                            <line id="arrow-met-quasi" class="hierarchy-arrow"
+                                style="stroke: var(--accent-color); stroke-dasharray: 5, 3;" x1="300" y1="160" x2="300"
+                                y2="130" />
+                        </g>
+                    </svg>
+
+                    <!-- Zugehörige Operationen-Liste -->
+                    <ul id="scales-operations-list" style="text-align: left; max-width: 450px; margin: 20px auto;">
+                        <li id="op-nominal"><strong>Nominal:</strong> Auszählen von Häufigkeiten (Anzahl, Prozent),
+                            Modalwert bestimmen.</li>
+                        <li id="op-ordinal"><strong>Ordinal:</strong> <em>+ Zusätzlich:</em> Rangordnung bilden, Median
+                            bestimmen.</li>
+                        <li id="op-interval"><strong>Intervall (Metrisch):</strong> <em>+ Zusätzlich:</em> Differenzen
+                            bilden (Abstände interpretieren), Mittelwert berechnen, Standardabweichung etc.</li>
+                        <li id="op-ratio"><strong>Ratio (Metrisch):</strong> <em>+ Zusätzlich:</em> Verhältnisse bilden
+                            ("doppelt so alt"), alle Grundrechenarten anwenden.</li>
+                        <li id="op-quasi" style="font-style: italic; border: 1px dashed var(--accent-color);">
+                            <strong>Quasi-Metrisch:</strong> Oft werden Mittelwerte etc. berechnet (wie bei metrisch),
+                            obwohl es formal ordinal ist. Wichtig: Annahme gleicher Abstände muss plausibel sein!
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Textuelle Erläuterungen -->
+                <h3>Die Skalenniveaus im Detail:</h3>
+                <ul>
+                    <li>
+                        <strong>Nominalskala:</strong> Das niedrigste Niveau. Es erlaubt nur die Klassifikation von
+                        Objekten in verschiedene Kategorien, die sich gegenseitig ausschließen. Man kann nur
+                        feststellen, ob zwei Objekte gleich oder verschieden sind.
+                        <ul>
+                            <li><em>Beispiele:</em> Geschlecht (m/w/d), Parteizugehörigkeit (CDU/SPD/Grüne...),
+                                Lieblingsfarbe, Ja/Nein-Antworten.</li>
+                            <li><em>Erlaubte Operation:</em> Zählen (Häufigkeiten, Prozent).</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Ordinalskala:</strong> Zusätzlich zur Unterscheidung erlaubt dieses Niveau eine
+                        Rangordnung der Kategorien. Man weiß, dass eine Kategorie "mehr" oder "besser" ist als eine
+                        andere, aber nicht, um wie viel. Die Abstände zwischen den Rängen sind nicht definiert oder
+                        nicht notwendigerweise gleich.
+                        <ul>
+                            <li><em>Beispiele:</em> Schulnoten (1 ist besser als 2, aber der Abstand zwischen 1 und 2
+                                ist nicht zwingend gleich dem zwischen 2 und 3), Bildungsabschlüsse (Hauptschule <
+                                    Realschule < Abitur), Zustimmungsskalen ("stimme gar nicht zu" < ...
+                                    < "stimme voll zu" ).</li>
+                            <li><em>Erlaubte Operationen:</em> Zählen, Ordnen (Median).</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Metrische Skala (Intervall- & Ratioskala):</strong> Das höchste Niveau. Hier sind nicht
+                        nur die Rangfolge, sondern auch die Abstände (Intervalle) zwischen den Werten definiert und
+                        gleich groß.
+                        <ul>
+                            <li><strong>Intervallskala:</strong> Besitzt gleiche Abstände, aber keinen absoluten
+                                (natürlichen) Nullpunkt. Null ist hier willkürlich gesetzt.
+                                <ul>
+                                    <li><em>Beispiele:</em> Temperatur in Celsius (0°C ist nicht "keine Temperatur"),
+                                        Jahreszahlen, standardisierte IQ-Werte.</li>
+                                    <li><em>Erlaubte Operationen:</em> Zählen, Ordnen, Addition/Subtraktion (Differenzen
+                                        sind sinnvoll), Mittelwertbildung. Verhältnisse (z.B. "doppelt so warm") sind
+                                        nicht sinnvoll.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Ratioskala (Verhältnisskala):</strong> Besitzt gleiche Abstände UND einen
+                                absoluten Nullpunkt, der das Nichtvorhandensein des Merkmals bedeutet.
+                                <ul>
+                                    <li><em>Beispiele:</em> Alter in Jahren (0 Jahre = nicht gelebt), Körpergröße in cm,
+                                        Nutzungsdauer in Stunden, Anzahl gelesener Artikel, Einkommen in Euro.</li>
+                                    <li><em>Erlaubte Operationen:</em> Alle Grundrechenarten, einschließlich
+                                        Verhältnisbildung (z.B. "doppelt so alt", "halb so viel Einkommen").</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Sonderfall: Quasi-metrische Skalen</h4>
+                <p>In der Sozialforschung, insbesondere bei Befragungen, werden häufig Skalen verwendet (z.B.
+                    Likert-Skalen von 1-5 oder 1-7 zur Messung von Zustimmung, Zufriedenheit etc.), die streng genommen
+                    ordinal sind. Man kann nicht sicher sein, ob der wahrgenommene Abstand zwischen "stimme eher nicht
+                    zu" (2) und "teils/teils" (3) derselbe ist wie zwischen "teils/teils" (3) und "stimme eher zu" (4).
+                </p>
+                <p>In der Praxis werden solche Skalen jedoch sehr oft als <strong>quasi-metrisch</strong> behandelt. Das
+                    bedeutet, man <em>nimmt an</em>, dass die Abstände zwischen den Skalenpunkten ungefähr gleich sind,
+                    und berechnet dann Mittelwerte und andere metrische Statistiken. Dies ist oft pragmatisch notwendig
+                    und liefert nützliche Einblicke, man sollte sich aber dieser Annahme bewusst sein und sie kritisch
+                    hinterfragen.</p>
+
+                <div class="info-box">
+                    <strong>Wichtigkeit für eure Auswertungsstrategie:</strong> Die Wahl des Skalenniveaus bei der
+                    Operationalisierung (Aufgabe 5a) legt fest, welche statistischen Maße (Häufigkeiten, Mittelwerte
+                    etc.) ihr in eurer Auswertungsstrategie (Aufgabe 5b) überhaupt sinnvoll planen könnt! Überlegt euch
+                    also gut, welches Niveau ihr anstrebt und ob eure Operationalisierung dieses Niveau auch wirklich
+                    erreicht.
+                </div>
+            </section>
+            <!-- =========================================================== -->
+            <!--           ENDE NEUE SEKTION: MESS- UND SKALENNIVEAUS        -->
+            <!-- =========================================================== -->
+
+
+            <!-- Hier geht es dann weiter mit <section id="example"...> etc. -->
+
+            <!-- Füge DIESEN Script-Block ganz am Ende der HTML-Datei hinzu, VOR dem schließenden </body> Tag -->
+            <script>
+                // --- Skript für die Interaktivität der Skalenniveau-Grafik ---
+                document.addEventListener('DOMContentLoaded', () => {
+                    const svg = document.getElementById('scales-svg');
+                    if (!svg) return; // Exit if SVG not found
+
+                    const nominalBox = svg.getElementById('nominal-box');
+                    const ordinalBox = svg.getElementById('ordinal-box');
+                    const metricBox = svg.getElementById('metric-box');
+                    const quasiMetricBox = svg.getElementById('quasi-metric-box');
+
+                    const arrowNomOrd = svg.getElementById('arrow-nom-ord');
+                    const arrowOrdMet = svg.getElementById('arrow-ord-met');
+                    const arrowMetQuasi = svg.getElementById('arrow-met-quasi');
+
+                    const opList = document.getElementById('scales-operations-list');
+                    const opNominal = opList?.querySelector('#op-nominal');
+                    const opOrdinal = opList?.querySelector('#op-ordinal');
+                    const opInterval = opList?.querySelector('#op-interval');
+                    const opRatio = opList?.querySelector('#op-ratio');
+                    const opQuasi = opList?.querySelector('#op-quasi');
+
+                    const allBoxes = [nominalBox, ordinalBox, metricBox, quasiMetricBox];
+                    const allArrows = [arrowNomOrd, arrowOrdMet, arrowMetQuasi];
+                    const allOps = [opNominal, opOrdinal, opInterval, opRatio, opQuasi];
+
+                    let currentLevel = 0; // 0: Initial, 1: Nominal, 2: Ordinal, 3: Metric, 4: Quasi
+
+                    // Function to set visibility and active state
+                    const updateVisibility = (level) => {
+                        allBoxes.forEach((box, index) => {
+                            if (index + 1 <= level) {
+                                box?.classList.add('visible');
+                                box?.classList.toggle('active', index + 1 === level); // Highlight current level
+                            } else {
+                                box?.classList.remove('visible', 'active');
+                            }
+                        });
+                        allArrows.forEach((arrow, index) => {
+                            arrow?.classList.toggle('visible', index + 1 < level); // Arrow visible when level *above* is shown
+                        });
+                        allOps.forEach((op, index) => {
+                            op?.classList.toggle('active-op', index < level && level <= 4); // Ops active up to Interval/Ratio
+                            if (index === 4) { // Special handling for Quasi-Metric op
+                                op?.classList.toggle('active-op', level === 4);
+                            }
+                        });
+                        // Ensure Nominal ops are active when Nominal level is active
+                        if (opNominal) {
+                            opNominal.classList.toggle('active-op', level >= 1 && level <= 4);
+                        }
+                    };
+
+                    // Intersection Observer to trigger the initial animation
+                    const observerCallback = (entries, observer) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && currentLevel === 0) {
+                                currentLevel = 1; // Show Nominal level first
+                                updateVisibility(currentLevel);
+                                observer.unobserve(entry.target); // Trigger only once on scroll
+                            }
+                        });
+                    };
+                    const scaleObserver = new IntersectionObserver(observerCallback, { threshold: 0.5 });
+                    if (nominalBox) {
+                        scaleObserver.observe(nominalBox.closest('section')); // Observe the whole section
+                    }
+
+
+                    // Click listeners for progression (optional, could also be pure animation)
+                    allBoxes.forEach((box, index) => {
+                        box?.addEventListener('click', () => {
+                            // Cycle through levels on click, maxing out at Quasi-Metric (level 4)
+                            currentLevel = (currentLevel % 5) + 1; // 1 -> 2 -> 3 -> 4 -> 5(reset)-> 1
+                            if (currentLevel > 4 && !quasiMetricBox.classList.contains('visible')) { // Make sure Quasi shows up
+                                currentLevel = 4; // Cycle to show quasi if not shown
+                            } else if (currentLevel > 4) {
+                                currentLevel = 1; // Reset after quasi
+                            }
+
+                            updateVisibility(currentLevel);
+                        });
+                    });
+
+                    // Initial state (hidden until scrolled into view)
+                    // updateVisibility(currentLevel); // No need for initial call if Observer handles first step
+                });
+            </script>
+
+            <section id="theory" class="animated-on-scroll">
+                <h2>Theoretischer Hintergrund: Operationalisierung & Auswertungsplanung</h2>
+
+                <!-- =========================================================== -->
+                <!--                AUSFÜHRLICHER TEIL: OPERATIONALISIERUNG        -->
+                <!-- =========================================================== -->
+                <h3>Operationalisierung: Vom Konzept zur konkreten Messvorschrift</h3>
+                <p>Nachdem ihr eure Konzepte und deren Dimensionen definiert habt (das <strong>WAS</strong>), folgt nun
+                    der entscheidende Schritt der Operationalisierung: Ihr legt fest, <strong>WIE</strong> ihr diese
+                    Konstrukte empirisch erfassen wollt. Es geht darum, abstrakte Ideen in konkrete, beobachtbare und
+                    messbare Größen zu übersetzen.</p>
+                <blockquote>
+                    "Operationalisieren heißt, einem Begriff [oder einer Dimension] beobachtbare Indikatoren zuzuordnen
+                    und die Messvorschriften festzulegen." (In Anlehnung an Schnell et al.; Raupp & Vogelgesang 2009, S.
+                    152)
+                </blockquote>
+                <p>Dieser Schritt ist absolut zentral für die <strong>Qualität eurer Messung</strong>. Eine gute
+                    Operationalisierung sorgt für:</p>
+                <ul>
+                    <li><strong>Validität:</strong> Ihr messt tatsächlich das, was ihr messen wollt (z.B. misst eure
+                        Frage nach KI-Nutzung wirklich die Nutzung und nicht nur die Bekanntheit?).</li>
+                    <li><strong>Reliabilität:</strong> Eure Messung ist zuverlässig und würde bei wiederholter Anwendung
+                        unter gleichen Bedingungen zu ähnlichen Ergebnissen führen (z.B. verstehen alle Befragten die
+                        Frage gleich? Können alle Codierer die Kategorie konsistent anwenden?).</li>
+                </ul>
+
+                <h4>Der Prozess der Operationalisierung: Entscheidungen treffen</h4>
+                <p>Operationalisierung ist kein passives Finden, sondern ein aktiver Prozess des Entscheidens. Ihr müsst
+                    für jede eurer Dimensionen festlegen:</p>
+                <ol>
+                    <li><strong>Welche Indikatoren?</strong> Wählt oder entwickelt beobachtbare Sachverhalte, die eure
+                        Dimension anzeigen. Wie viele Indikatoren braucht ihr? (Siehe nächster Punkt).</li>
+                    <li><strong>Welches Messniveau (Skalenniveau)?</strong> Auf welchem Niveau wollt ihr messen? Dies
+                        beeinflusst die späteren Auswertungsmöglichkeiten massiv!
+                        <ul>
+                            <li><code>Nominal:</code> Kategorien ohne Rangfolge (z.B. Geschlecht, Politikername,
+                                ja/nein).</li>
+                            <li><code>Ordinal:</code> Kategorien mit klarer Rangfolge, aber unklaren Abständen (z.B.
+                                Schulbildung, Zustimmungsskala "stimme gar nicht zu" bis "stimme voll zu", sofern man
+                                die Abstände nicht als gleich annimmt).</li>
+                            <li><code>Metrisch (Intervall/Ratio):</code> Eindeutige Rangfolge mit gleichen Abständen
+                                (z.B. Alter in Jahren, Nutzungsdauer in Stunden, Häufigkeit des Vorkommens).
+                                Likert-Skalen werden oft als quasi-metrisch behandelt, was Mittelwertberechnungen
+                                erlaubt.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Welche Messvorschrift im Detail?</strong>
+                        <ul>
+                            <li><strong>Bei Befragung/Experiment:</strong> Exakter Wortlaut der Frage/des Items? Art der
+                                Frage (offen/geschlossen)? Antwortformat (Single/Multiple Choice, Skala)? Anzahl der
+                                Skalenpunkte? Beschriftung der Skalenpunkte (numerisch? verbal? Endpunktbenannt?)?
+                                Reihenfolge der Fragen?</li>
+                            <li><strong>Bei Inhaltsanalyse:</strong> Genaue Definition der Codiereinheit (z.B. einzelner
+                                Satz, ganzer Artikel, komplettes Video)? Exakte Definition der Kategorien und ihrer
+                                Ausprägungen (Werte)? Klare, unmissverständliche Codieranweisungen (Wann wird welcher
+                                Code vergeben? Was tun bei Mehrdeutigkeiten?)?</li>
+                            <li><strong>Bei Experiment:</strong> Exakte Beschreibung des Stimulus und der Manipulation
+                                (Was genau wird wie verändert zwischen den Gruppen?).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Bestehende Instrumente nutzen oder neu entwickeln?</strong> Für viele Konstrukte (z.B.
+                        Einstellungen, Persönlichkeitsmerkmale, Glaubwürdigkeit) gibt es bereits etablierte und
+                        validierte Skalen. Diese zu nutzen spart Arbeit und erhöht die Vergleichbarkeit. Wenn keine
+                        passenden Instrumente existieren, müsst ihr eigene entwickeln. <strong>Wichtig: Immer Quellen
+                            angeben!</strong></li>
+                </ol>
+
+                <h4>Dimensionen und Indikatoren: Die Beziehung gestalten</h4>
+                <p>Die Beziehung zwischen euren theoretischen Dimensionen und den konkreten Indikatoren kann
+                    unterschiedlich aussehen:</p>
+
+                <div class="info-box" style="border-left-color: var(--uni-hohenheim-lightblue);">
+                    <h4 style="color: var(--uni-hohenheim-lightblue); margin-top: 0;">Typ 1: Dimension mit einem
+                        manifesten Indikator</h4>
+                    <p>Manchmal reicht ein einziger, direkter Indikator, um eine klar definierte Dimension zu erfassen.
+                    </p>
+                    <p><em>Beispiel: Geschlecht</em></p>
+                    <p>Dimension: <code>Biologisches Geschlecht / Gender-Identität</code> (je nach Definition)</p>
+                    <p>Indikator: Eine Frage "Ich bin..." mit den Ausprägungen (Antwortoptionen):</p>
+                    <ul>
+                        <li>weiblich ☐</li>
+                        <li>männlich ☐</li>
+                        <li>divers ☐</li>
+                        <li>keine Angabe ☐</li>
+                    </ul>
+                    <p><strong>Entscheidungen hier:</strong> Welche Ausprägungen sind nötig/sinnvoll? Ist die Frage
+                        optional?</p>
+                </div>
+
+                <div class="info-box" style="border-left-color: var(--accent-color);">
+                    <h4 style="color: var(--accent-color); margin-top: 0;">Typ 2: Dimension mit mehreren manifesten
+                        Indikatoren (Indexbildung)</h4>
+                    <p>Oft ist eine Dimension zu komplex für nur einen Indikator. Mehrere Indikatoren (z.B.
+                        Fragen/Items) erfassen verschiedene Facetten oder erhöhen die Messgenauigkeit. Sie werden oft zu
+                        einem Indexwert verrechnet (z.B. Summe oder Mittelwert).</p>
+                    <p><em>Beispiel: Intentionalität der TV-Programmwahl</em></p>
+                    <p>Dimension: <code>Zielgerichtetheit/Planung bei der Auswahl von Fernsehsendungen</code></p>
+                    <p>Indikatoren: Mehrere Aussagen mit Zustimmungsskala (1=trifft voll zu ... 5=trifft gar nicht zu):
+                    </p>
+                    <ul>
+                        <li>Item 1: "Ich plane mein Fernsehprogramm am Anfang der Woche mit einer Programmvorschau..."
+                        </li>
+                        <li>Item 2: "Ich schalte meist an, ohne vorher zu wissen, was läuft; irgendwas Interessantes
+                            gibt es fast immer. (invers)"</li>
+                        <li>Item 3: "Ich entscheide mich am selben Tag, indem ich in die Programmzeitung schaue..."</li>
+                        <li>Item 4: "Ich plane meine Abende so, dass ich meine Lieblingssendungen nicht verpasse."</li>
+                    </ul>
+                    <p><strong>Entscheidungen hier:</strong> Welche Items erfassen das Konstrukt am besten? Wie viele
+                        Items sind nötig? Wie wird die Skala beschriftet? Müssen Items invertiert werden (wie Item 2)?
+                        Wie wird der Index berechnet (Mittelwert?)?</p>
+                </div>
+
+                <div class="info-box" style="border-left-color: var(--uni-hohenheim-blue);">
+                    <h4 style="color: var(--uni-hohenheim-blue); margin-top: 0;">Typ 3: Mehrdimensionales Konstrukt
+                        (Indikatoren pro Subdimension)</h4>
+                    <p>Sehr komplexe Konstrukte bestehen aus mehreren Dimensionen (Subdimensionen). Jede Subdimension
+                        braucht ihre eigene Operationalisierung (durch einen oder meist mehrere Indikatoren).</p>
+                    <p><em>Beispiel: Nachrichtenwert</em></p>
+                    <p>Konstrukt: <code>Nachrichtenwert</code></p>
+                    <ul>
+                        <li>Subdimension 1: <code>Konflikt</code> -> Indikator: Code "Konflikt vorhanden (ja/nein)"</li>
+                        <li>Subdimension 2: <code>Überraschung</code> -> Indikator: Code "Überraschungselement vorhanden
+                            (ja/nein)"</li>
+                        <li>Subdimension 3: <code>Nähe</code> -> Indikator: Code "Geografische Nähe
+                            (lokal/regional/national/international)"</li>
+                        <li>... weitere Subdimensionen (Prominenz, Schaden etc.) mit je eigenen Indikatoren ...</li>
+                    </ul>
+                    <p><strong>Entscheidungen hier:</strong> Welche Subdimensionen sind relevant? Wie wird jede
+                        Subdimension durch Kategorien/Ausprägungen im Codebuch erfasst? Sind die Kategorien trennscharf
+                        und erschöpfend?</p>
+
+                    <p><em>Beispiel 2 (aus Folie, Befragung): Sensation Seeking</em></p>
+                    <p>Konstrukt: <code>Sensation Seeking</code></p>
+                    <ul>
+                        <li>Subdimension 1: <code>Thrill and Adventure Seeking</code> -> Indikatoren: Mehrere Items wie
+                            "Ich würde gerne Fallschirmspringen." (Skala 1-4)</li>
+                        <li>Subdimension 2: <code>Experience Seeking</code> -> Indikatoren: Mehrere Items wie "Ich fände
+                            es interessant, jemanden aus dem Ausland zu heiraten." (Skala 1-4)</li>
+                        <li>Subdimension 3: <code>Disinhibition</code> -> Indikatoren: Mehrere Items wie "Ich mag keine
+                            extrem scharfen Speisen. (invers)" (Skala 1-4)</li>
+                        <li>Subdimension 4: <code>Boredom Susceptibility</code> -> Indikatoren: Mehrere Items wie "Wenn
+                            ich in einer langen Schlange stehe, bin ich sehr ungeduldig." (Skala 1-4)</li>
+                    </ul>
+                    <p><strong>Entscheidungen hier:</strong> Welche Subdimensionen sind relevant? Welche validierten
+                        Items (hier z.B. aus der AISS-Skala von Roth, 2003) werden genutzt? Wie werden die Skalenwerte
+                        pro Subdimension und ggf. ein Gesamtwert berechnet?</p>
+                </div>
+
+                <p>Eure Hauptaufgabe in diesem Schritt ist es, für <strong>jede eurer definierten Dimensionen</strong>
+                    (aus Aufgabe 4) diese Operationalisierungsentscheidungen zu treffen und die konkreten Indikatoren
+                    (Fragen, Codekategorien, Stimulus-Merkmale) sorgfältig zu entwerfen und zu begründen.</p>
+
+                <div class="pitfall-box">
+                    <h3>Häufige Stolpersteine bei der Operationalisierung</h3>
+                    <ul>
+                        <li><strong>Unklare Indikatoren:</strong> Die Frage ist missverständlich formuliert, die
+                            Code-Anweisung lässt Interpretationsspielraum. -> Folge: Geringe Reliabilität.</li>
+                        <li><strong>Schlechte Passung Indikator-Dimension (Validitätsproblem):</strong> Die
+                            Frage/Kategorie misst nicht (nur) das, was sie messen soll. -> Folge: Ungültige Ergebnisse.
+                        </li>
+                        <li><strong>Suggestivfragen/Verzerrte Formulierungen:</strong> Die Frage lenkt die Antwort in
+                            eine bestimmte Richtung.</li>
+                        <li><strong>Unvollständige/Nicht trennscharfe Antwortkategorien/Ausprägungen:</strong> Der
+                            Befragte/Codierer findet keine passende Option oder könnte mehrere ankreuzen/codieren.</li>
+                        <li><strong>Überforderung:</strong> Zu viele oder zu komplexe Fragen/Codierungen.</li>
+                        <li><strong>Fehlende Begründung:</strong> Es ist unklar, warum eine bestimmte
+                            Operationalisierung gewählt wurde (besonders bei Eigenentwicklungen).</li>
+                    </ul>
+                    <p><strong>Tipp:</strong> Orientiert euch an etablierten Methoden und Instrumenten, testet eure
+                        Entwürfe (erstmal selbst, dann im Pretest) und begründet eure Entscheidungen nachvollziehbar!
+                    </p>
+                </div>
+
+                <!-- =========================================================== -->
+                <!--           TEIL 2: AUSWERTUNGSSTRATEGIE (leicht angepasst)     -->
+                <!-- =========================================================== -->
+                <h3>Auswertungsstrategie: Den Weg zum Ergebnis planen</h3>
+                <p>Parallel zur Entwicklung des Messinstruments müsst ihr planen, wie ihr die damit erhobenen Daten
+                    auswerten wollt. Diese Planung ist entscheidend, denn sie hilft euch:</p>
+                <ul>
+                    <li>... zu überlegen, wie ihr eure <strong>Forschungsfragen konkret beantworten</strong> und
+                        <strong>Hypothesen überprüfen</strong> könnt.
+                    </li>
+                    <li>... die <strong>Vollständigkeit eures Instruments</strong> zu checken (Fehlen Variablen? Sind
+                        Kontrollvariablen da?).</li>
+                    <li>... die <strong>Angemessenheit eures Instruments</strong> zu prüfen (Passen Skalenniveaus zur
+                        geplanten Auswertung? Sind Antwortkategorien sinnvoll? Vollständig?).</li>
+                    <li>... eure <strong>Stichprobenplanung zu kontrollieren</strong> (Reichen die Fallzahlen für
+                        geplante Vergleiche?).</li>
+                </ul>
+
+                <h4>Bestandteile einer Auswertungsstrategie:</h4>
+                <ol>
+                    <li><strong>Variablen identifizieren:</strong> Welche konkreten Variablen (Indikatoren) aus eurem
+                        Fragebogen/Codebuch sind für welche Forschungsfrage/Hypothese relevant?</li>
+                    <li><strong>Rollen klären (bei Hypothesen):</strong> Was ist die unabhängige Variable (uV), was die
+                        abhängige (aV)?</li>
+                    <li><strong>Variablen zusammenfassen?:</strong> Plant ihr, mehrere Items zu einem Index
+                        zusammenzufassen (z.B. Mittelwertbildung bei einer Skala)? Wenn ja, wie genau?</li>
+                    <li><strong>Ausprägungen zusammenfassen?:</strong> Müsst ihr für die Auswertung oder Darstellung
+                        Kategorien zusammenlegen (z.B. Altersgruppen bilden, Skalenstufen gruppieren)?</li>
+                    <li><strong>Statistische Auswertung entwerfen:</strong> Welche statistischen Maße wollt ihr
+                        verwenden?
+                        <ul>
+                            <li>Im Rahmen dieses Kurses fokussieren wir auf grundlegende deskriptive Maße:
+                                <ul>
+                                    <li><strong>(Relative) Häufigkeiten und Prozentwerte:</strong> Für nominal- oder
+                                        ordinalskalierte Variablen (z.B. "Wie viele Videos zeigen Politiker X?", "Wie
+                                        viel Prozent der Befragten nutzen KI täglich?").</li>
+                                    <li><strong>Mittelwerte ("Durchschnitt"):</strong> Für (quasi-)metrische Variablen
+                                        oder Skalen (z.B. "Wie hoch ist die durchschnittliche Glaubwürdigkeitsbewertung
+                                        auf einer Skala von 1-5?", "Wie viele Stunden wird im Schnitt genutzt?").
+                                        Mittelwerte eignen sich gut zum Vergleich zwischen Gruppen.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Wichtig:</strong> Das Skalenniveau eurer Variablen bestimmt, welche Maße
+                                sinnvoll sind! Mittelwerte bei reinen Nominaldaten (wie "Lieblingsfarbe") sind nicht
+                                aussagekräftig.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Ergebnisdarstellung entwerfen:</strong> Wie wollt ihr die Ergebnisse präsentieren?
+                        Skizziert Tabellen oder Grafiken.
+                        <ul>
+                            <li><strong>Tabellen:</strong> Gut für genaue Zahlen (Häufigkeiten, Prozentwerte,
+                                Mittelwerte).</li>
+                            <li><strong>Diagramme (z.B. Balken-, Säulendiagramme):</strong> Gut zur Visualisierung von
+                                Unterschieden (Häufigkeiten, Mittelwerte zwischen Gruppen).</li>
+                            <li><strong>Wichtig:</strong> Ein Ergebnis wird i.d.R. <strong>entweder</strong> als Tabelle
+                                <strong>oder</strong> als Grafik dargestellt, nicht doppelt.
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+                <p>Diese Planung stellt sicher, dass ihr am Ende auch wirklich die Daten habt und auswerten könnt, die
+                    ihr für eure Schlussfolgerungen benötigt.</p>
+            </section>
+
+            <section id="example" class="animated-on-scroll">
+                <h2>Beispiele für Auswertungsstrategien</h2>
+
+                <h4>Beispiel 1: Häufigkeiten einer nominalen Variable (Inhaltsanalyse)</h4>
+                <ul>
+                    <li><strong>Forschungsfrage (vereinfacht):</strong> Welche Tiere kommen am häufigsten in der Werbung
+                        vor?</li>
+                    <li><strong>Variable:</strong> `Wichtigstes_Tier_im_Video` (Nominalskala mit Ausprägungen: Bär,
+                        Fisch, Tiger, Affe, Hund)</li>
+                    <li><strong>Statistisches Maß:</strong> Absolute und relative Häufigkeiten pro Ausprägung.</li>
+                    <li><strong>Ergebnisdarstellung (Skizze):</strong>
+                        <table class="evaluation-example">
+                            <caption>Tabelle X: Häufigkeit der dargestellten Tierarten (N=54)</caption>
+                            <thead>
+                                <tr>
+                                    <th>Tierart</th>
+                                    <th>Anzahl Videos</th>
+                                    <th>Anteil</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Bär</td>
+                                    <td>22</td>
+                                    <td>41%</td>
+                                </tr>
+                                <tr>
+                                    <td>Fisch</td>
+                                    <td>15</td>
+                                    <td>28%</td>
+                                </tr>
+                                <tr>
+                                    <td>Tiger</td>
+                                    <td>8</td>
+                                    <td>15%</td>
+                                </tr>
+                                <tr>
+                                    <td>Affe</td>
+                                    <td>7</td>
+                                    <td>13%</td>
+                                </tr>
+                                <tr>
+                                    <td>Hund</td>
+                                    <td>2</td>
+                                    <td>4%</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Gesamt</strong></td>
+                                    <td><strong>54</strong></td>
+                                    <td><strong>100%</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="text-align: center; margin-top: 5px;"><em>Alternativ: Säulendiagramm mit absoluten
+                                oder relativen Häufigkeiten.</em></p>
+                    </li>
+                </ul>
+
+                <h4>Beispiel 2: Mittelwert einer (quasi-)metrischen Variable (Befragung)</h4>
+                <ul>
+                    <li><strong>Forschungsfrage (vereinfacht):</strong> Wie viele Folgen einer Serie sehen Befragte pro
+                        Woche im Schnitt?</li>
+                    <li><strong>Variable:</strong> `Anzahl_rezipierte_Folgen_pro_Woche` (Metrische Skala, z.B. offene
+                        Eingabe der Zahl)</li>
+                    <li><strong>Statistisches Maß:</strong> Mittelwert (M).</li>
+                    <li><strong>Ergebnisdarstellung (Skizze):</strong>
+                        <p>Im Ergebnisteil würde stehen: "Die Befragten sahen durchschnittlich M = 3.3 Folgen pro Woche
+                            (SD = [Platzhalter])."</p>
+                        <p><em>(Ggf. zusätzlich ein Histogramm zur Darstellung der Verteilung).</em></p>
+                    </li>
+                </ul>
+
+                <h4>Beispiel 3: Vergleich mehrerer dichotomer Variablen (Inhaltsanalyse)</h4>
+                <ul>
+                    <li><strong>Forschungsfrage (vereinfacht):</strong> Welche gestalterischen Merkmale kommen häufig in
+                        den Videos vor?</li>
+                    <li><strong>Variablen:</strong> `Musik_vorhanden` (ja/nein), `Text_vorhanden` (ja/nein),
+                        `Sprecher_vorhanden` (ja/nein) etc. (Nominal, dichotom)</li>
+                    <li><strong>Statistisches Maß:</strong> Absolute und relative Häufigkeiten für die Ausprägung "ja"
+                        (oder "kommt vor") pro Variable.</li>
+                    <li><strong>Ergebnisdarstellung (Skizze):</strong>
+                        <table class="evaluation-example">
+                            <caption>Tabelle Y: Vorkommen gestalterischer Merkmale (N=112)</caption>
+                            <thead>
+                                <tr>
+                                    <th>Merkmal</th>
+                                    <th>Anzahl Videos (kommt vor)</th>
+                                    <th>Anteil (kommt vor)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Musik</td>
+                                    <td>78</td>
+                                    <td>70%</td>
+                                </tr>
+                                <tr>
+                                    <td>Text</td>
+                                    <td>56</td>
+                                    <td>50%</td>
+                                </tr>
+                                <tr>
+                                    <td>Sprecher</td>
+                                    <td>32</td>
+                                    <td>29%</td>
+                                </tr>
+                                <tr>
+                                    <td>Standbild</td>
+                                    <td>29</td>
+                                    <td>26%</td>
+                                </tr>
+                                <tr>
+                                    <td>Animation</td>
+                                    <td>11</td>
+                                    <td>10%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="text-align: center; margin-top: 5px;"><em>Alternativ: Balkendiagramm, das die
+                                Prozentwerte vergleicht.</em></p>
+                    </li>
+                </ul>
+
+                <h4>Beispiel 4: Mittelwertsvergleich zwischen Gruppen (Experiment/Befragung)</h4>
+                <ul>
+                    <li><strong>Hypothese (vereinfacht):</strong> Gruppe A bewertet Glaubwürdigkeit höher als Gruppe B.
+                    </li>
+                    <li><strong>Variable(n):</strong> `Glaubwürdigkeits_Index` (Metrische Skala 1-5, berechnet aus
+                        Items), `Gruppe` (Nominal: A/B) als uV.</li>
+                    <li><strong>Statistisches Maß:</strong> Mittelwert von `Glaubwürdigkeits_Index` für Gruppe A und für
+                        Gruppe B.</li>
+                    <li><strong>Ergebnisdarstellung (Skizze):</strong>
+                        <table class="evaluation-example">
+                            <caption>Tabelle Z: Mittlere Glaubwürdigkeit nach Gruppe</caption>
+                            <thead>
+                                <tr>
+                                    <th>Gruppe</th>
+                                    <th>Mittlere Glaubwürdigkeit (M)</th>
+                                    <th>Standardabweichung (SD)</th>
+                                    <th>N</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Gruppe A</td>
+                                    <td>[Wert z.B. 3.8]</td>
+                                    <td>[Wert]</td>
+                                    <td>[Wert]</td>
+                                </tr>
+                                <tr>
+                                    <td>Gruppe B</td>
+                                    <td>[Wert z.B. 3.2]</td>
+                                    <td>[Wert]</td>
+                                    <td>[Wert]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="text-align: center; margin-top: 5px;"><em>Alternativ: Balkendiagramm mit Fehlerbalken,
+                                das die Mittelwerte vergleicht.</em></p>
+                    </li>
+                </ul>
+            </section>
+
+            <section id="method-specifics" class="animated-on-scroll">
+                <h2>Konkreter Output & Ausblick für Aufgaben 5 & 6 (pro Methode)</h2>
+                <p>Hier findet ihr spezifische Hinweise für den Entwurf eures Instruments (Aufgabe 5) und eine
+                    Vorausschau auf mögliche Ansätze für eure Auswertungsstrategie (Aufgabe 6).</p>
+
+                <!-- ===== GRUPPE BEFRAGUNG ===== -->
+                <div class="group-guidance-box">
+                    <h4>Gruppe C: Befragung (KI & Arbeitswelt)</h4>
+
+                    <h5>Aufgabe 5: Entwurf Untersuchungsinstrument (Fragebogen)</h5>
+                    <ul>
+                        <li><strong>Instrument:</strong> Erstellt den Fragebogenentwurf (z.B. in SoSci Survey). Achtet
+                            auf klare Struktur, Nummerierung, Filterführung.</li>
+                        <li><strong>Operationalisierung (Fokus):</strong>
+                            <ul>
+                                <li><strong>KI-Einsatz:</strong> Wie operationalisiert ihr die Dimensionen (Info,
+                                    Entscheidung, Handlung) so, dass sie über G1-G4 <i>vergleichbar</i> sind? Entwickelt
+                                    konkrete Items. Welche Skala für Häufigkeit/Intensität?</li>
+                                <li><strong>Arbeitsplatzsicherheit:</strong> Konkrete Items für kognitive & affektive
+                                    Dimension? Prüft validierte Skalen (z.B. Probst, 2010) oder entwickelt eigene Items
+                                    begründet.</li>
+                                <li><strong>Arbeitszufriedenheit:</strong> Konkrete Items für die 4 Dimensionen
+                                    (Vergütung, Team, Tätigkeit, Autonomie)? Auch globale Frage? Prüft validierte Skalen
+                                    (JDI, MSQ Ausschnitte?).</li>
+                                <li><strong>H1 (Soziale Berufe):</strong> Wie fragt ihr Zugehörigkeit ab (evtl. über
+                                    spezifische Berufsbezeichnungen oder Selbstzuordnung basierend auf Definition)?</li>
+                                <li><strong>H3 (Medien/Einstellung):</strong> Konkrete Items zur Nutzung (Quellen?),
+                                    wahrg. Tonalität (Skala?), Einstellung (Dimensionen?). Bleibt die Messung
+                                    realistisch?</li>
+                                <li><strong>Drittvariablen:</strong> Konkrete Fragen für Demografie, techn.
+                                    Interesse/Vertrauen?</li>
+                            </ul>
+                        </li>
+                        <li><strong>Begründung (3-6 Seiten):</strong> Warum welche Skalen (Stufen, Label),
+                            Formulierungen? Quellen!</li>
+                    </ul>
+
+                    <h5>Aufgabe 6: Auswertungsstrategie (Mögliche Ansätze - Vorschau!)</h5>
+                    <ul>
+                        <li><strong>Abhängig von Aufgabe 5:</strong> Die genaue Strategie hängt stark davon ab, welche
+                            Variablen ihr mit welchem Skalenniveau operationalisiert!</li>
+                        <li><strong>H1 (Sicherheit):</strong> <i>Potenziell:</i> Vergleich des Mittelwerts der
+                            `Arbeitsplatzsicherheit` (als Index?) zwischen Gruppe "Soziale Berufe" und anderen.
+                            Voraussetzung: (Quasi-)metrische Messung der Sicherheit.</li>
+                        <li><strong>H2 (Zufriedenheit):</strong> <i>Potenziell:</i> Vergleich der Mittelwerte der
+                            `Arbeitszufriedenheit` (Index oder Dimensionen?) zwischen G1-G4. Voraussetzung:
+                            (Quasi-)metrische Messung.</li>
+                        <li><strong>H3 (Medien/Einstellung):</strong> <i>Potenziell:</i> Mittelwertsvergleich der
+                            `Einstellung zu KI` zwischen Gruppen mit unterschiedlicher `Beeinträchtigung durch KI`
+                            (falls Beeinträchtigung messbar & gruppierbar) ODER Analyse des Zusammenhangs (Korrelation?)
+                            zwischen `Mediennutzung/Tonalität` und `Arbeitsplatzsicherheit`. Die Analyse hängt stark von
+                            der komplexen Operationalisierung ab.</li>
+                        <li><strong>RQ (Überblick):</strong> Deskriptive Statistiken (Häufigkeiten für Kategoriales,
+                            Mittelwerte für Metrisches) für KI-Einsatz, Zufriedenheit, Sicherheit, aufgeschlüsselt nach
+                            Berufsgruppen.</li>
+                        <li><strong>Darstellung (Skizzen):</strong> Entwerft mögliche Tabellen (z.B. Mittelwerte pro
+                            Gruppe) oder Balkendiagramme (z.B. für Einstellungsdimensionen).</li>
+                        <li><strong>Wichtig:</strong> Begründet in eurer finalen Strategie, warum ihr die gewählten Maße
+                            und Darstellungen für eure <i>tatsächlich</i> operationalisierten Variablen für geeignet
+                            haltet!</li>
+                    </ul>
+                </div>
+
+                <!-- ===== GRUPPE EXPERIMENT ===== -->
+                <div class="group-guidance-box">
+                    <h4>Gruppe C: Experiment (KI-Labeling & Reputation)</h4>
+
+                    <h5>Aufgabe 5: Entwurf Untersuchungsinstrument (Fragebogen & Stimuli)</h5>
+                    <ul>
+                        <li><strong>Instrument 1 (Stimuli):</strong> Erstellt konkrete Mock-ups der Posts (mit/ohne
+                            Label). Exakte Definition: Thema/Themen? Label-Text/Symbol? Platzierung?</li>
+                        <li><strong>Instrument 2 (Fragebogen):</strong> Entwurf des Post-Exposure-Fragebogens.
+                            <ul>
+                                <li><strong>AVs (Glaubwürdigkeit, Authentizität, Reputation):</strong> Entwickelt/Findet
+                                    konkrete Items für jede Dimension. Nutzt validierte Skalen wo möglich (Quelle!).
+                                    Legt Skalenformat fest (Stufen, Label?). Achtet auf Trennschärfe zw.
+                                    Glaubwürdigkeit/Authentizität.</li>
+                                <li><strong>Manipulationscheck:</strong> Formuliert die Fragen.</li>
+                                <li><strong>Kontrollvariablen:</strong> Formuliert Fragen/Items für Voreinstellungen
+                                    etc.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Begründung (3-6 Seiten):</strong> Warum diese Stimuli? Warum diese Items/Skalen?
+                            Bezug zu Quellen (Brüns & Meißner etc.).</li>
+                    </ul>
+
+                    <h5>Aufgabe 6: Auswertungsstrategie (Mögliche Ansätze - Vorschau!)</h5>
+                    <ul>
+                        <li><strong>Abhängig von Aufgabe 5:</strong> Setzt voraus, dass die AVs (zumindest
+                            quasi-)metrisch gemessen werden.</li>
+                        <li><strong>H1, H2, H3:</strong> <i>Potenziell:</i> Vergleich der Mittelwerte der Indizes für
+                            `Glaubwürdigkeit`, `Authentizität`, `Reputation` zwischen den Experimentalgruppen (mit vs.
+                            ohne Label).</li>
+                        <li><strong>Falls Themen variiert werden (alt H4):</strong> <i>Potenziell:</i> Auswertung über
+                            Mittelwertsvergleiche über alle 2xN Gruppen (z.B. Darstellung in Tabelle/Grafik). Prüfung
+                            von Haupteffekten (Label? Thema?) und Interaktion (Wirkt Label je nach Thema anders?). Dies
+                            erfordert ausreichend große Fallzahlen pro Zelle!</li>
+                        <li><strong>Kontrollvariablen:</strong> Deskriptiv prüfen, ob Randomisierung funktioniert hat.
+                        </li>
+                        <li><strong>Darstellung (Skizzen):</strong> Entwerft Tabellen/Balkendiagramme (mit
+                            Mittelwerten/SD pro Gruppe) für die Haupteffekte. Bei geplanter Interaktionsanalyse: Skizze
+                            eines Liniendiagramms.</li>
+                        <li><strong>Wichtig:</strong> Begründet, warum Mittelwertsvergleiche für eure gewählten Skalen
+                            zulässig sind (Quasi-metrische Annahme?).</li>
+                    </ul>
+                </div>
+
+                <!-- ===== GRUPPE INHALTSANALYSE ===== -->
+                <div class="group-guidance-box">
+                    <h4>Gruppe C: Inhaltsanalyse (Politiker in KI-Videos)</h4>
+
+                    <h5>Aufgabe 5: Entwurf Untersuchungsinstrument (Codebuch)</h5>
+                    <ul>
+                        <li><strong>Instrument:</strong> Erstellt das Codebuch als detaillierte Tabelle.</li>
+                        <li><strong>Codiereinheit:</strong> Definiert das Video. Klärt, wie mit Kontextwechseln
+                            <i>innerhalb</i> eines Videos umgegangen wird (separate Codierung von Segmenten?).</li>
+                        <li><strong>Kategorien & Ausprägungen (Fokus):</strong>
+                            <ul>
+                                <li><code>KI-Generierung (Identifikation):</code> Sehr klare Kriterien und Beispiele!
+                                </li>
+                                <li><code>Darstellungskontext (H1):</code> Extrem präzise Definitionen & Codierregeln
+                                    für "Traditionell Politisch" vs. "Nicht-Politisch" mit Beispielen für Grenzfälle.
+                                </li>
+                                <li><code>Dauer im Kontext (H1):</code> Messvorschrift (Sekunden?).</li>
+                                <li><code>Reale Politische Beziehung (H2):</code> Feste Zuordnung pro Paar im Codebuch
+                                    hinterlegen.</li>
+                                <li><code>Dargestellte Interaktion (H2):</code> Kernherausforderung! Sehr präzise
+                                    Definitionen der Ausprägungen ("Unerwartet Nah" etc.) durch <i>beobachtbare</i>
+                                    Indikatoren und klare Codierregeln.</li>
+                                <li><code>Politiker:</code> Liste mit Merkmalen.</li>
+                                <li><code>Weitere Variablen:</code> Metadaten (ID, Dauer, Likes etc.).</li>
+                            </ul>
+                        </li>
+                        <li><strong>Begründung (3-6 Seiten):</strong> Warum diese Kategorien/Ausprägungen? Wie sichern
+                            die Anweisungen Reliabilität? Bezug zu Aufgabe 4.</li>
+                    </ul>
+
+                    <h5>Aufgabe 6: Auswertungsstrategie (Mögliche Ansätze - Vorschau!)</h5>
+                    <ul>
+                        <li><strong>Abhängig von Aufgabe 5:</strong> Setzt voraus, dass die Kategorien im Codebuch klar
+                            definiert und (später) reliabel codierbar sind!</li>
+                        <li><strong>H1 (Kontext-Dauer):</strong> <i>Plan:</i> Pro Video: Berechne prozentualen Anteil
+                            der Dauer für "Nicht-Politisch" und "Traditionell Politisch". Dann: Vergleich der
+                            Mittelwerte dieser Prozentanteile über alle Videos.</li>
+                        <li><strong>H2 (Beziehung x Interaktion):</strong> <i>Plan:</i> Erstelle eine Kreuztabelle
+                            (`Reale Beziehung` x `Dargestellte Interaktion`). Berechne Prozentwerte (z.B. Spalten- oder
+                            Zeilenprozente, je nachdem, was die Hypothese genauer prüft – hier wahrscheinlich
+                            Zeilenprozente: "Von allen Videos mit realen Gegnern, wie viel % zeigen nahe Interaktion?").
+                            Vergleiche diese Prozentwerte zwischen den Zeilen (Gegner vs. Verbündete).</li>
+                        <li><strong>Deskriptiv (RQ):</strong> Berechnung von Häufigkeiten und Prozentwerten für einzelne
+                            Kategorien (z.B. welcher Politiker am häufigsten? Welche KI-Merkmale?).</li>
+                        <li><strong>Reliabilität:</strong> Plant konkret, wie die Intercoder-Reliabilität berechnet
+                            werden soll (z.B. welches Maß wie Cohens Kappa für welche Schlüsselvariablen?). Dies ist
+                            essentiell für die Glaubwürdigkeit der Ergebnisse!</li>
+                        <li><strong>Darstellung (Skizzen):</strong> Entwerft eine Tabelle für die Mittelwerte der
+                            prozentualen Dauer (H1), eine Kreuztabelle mit Prozentwerten (H2) und Beispiele für
+                            Häufigkeitstabellen/-diagramme.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="conclusion" class="animated-on-scroll">
+                <h2>Zusammenfassung und Ausblick</h2>
+                <p>Die nächsten drei Wochen sind zentral, um von der Theorie zur handfesten Methodik zu gelangen. Mit
+                    <strong>Aufgabe 5</strong> erstellt ihr diese Woche den ersten Entwurf eures Herzstücks – des
+                    Messinstruments – und begründet eure Entscheidungen. Die <strong>Diskussionsrunde nächste
+                        Woche</strong> dient dazu, diesen Entwurf zu schärfen.
+                </p>
+                <p>In <strong>Aufgabe 6</strong> plant ihr dann detailliert die Auswertung und finalisiert euer
+                    Instrument im Licht dieser Planung. Das Ergebnis ist ein durchdachtes Gesamtpaket aus Messinstrument
+                    und Auswertungsplan, das ihr dann <strong>in drei Wochen präsentiert</strong>.</p>
+                <h4>Key Takeaways für die nächsten 3 Wochen:</h4>
+                <ul>
+                    <li><strong>Aufgabe 5:</strong> Fokus auf Operationalisierung -> Instrumentenentwurf +
+                        Begründung erstellen & für Diskussion vorbereiten.</li>
+                    <li><strong>Aufgabe 6:</strong> Fokus auf Auswertungsstrategie -> Plan entwickeln,
+                        Instrument finalisieren, Gesamtdokument erstellen & Präsentation vorbereiten.</li>
+                    <li>Nutzt die Synergie: Die Auswertungsplanung informiert die Instrumentenentwicklung und umgekehrt!
+                    </li>
+                </ul>
+                <p>Nach Abschluss dieser beiden Aufgaben seid ihr bestens gerüstet für den nächsten wichtigen Schritt:
+                    Den <strong>Pretest</strong> eures Instruments, um dessen Qualität empirisch zu überprüfen.</p>
+            </section>
+
+        </main>
+
+        <footer class="page-footer">
+            <p>© Andreas Reich, Universität Hohenheim, Sommersemester 2025</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Animations-Skript (wie Vorwoche)
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.animated-on-scroll');
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+            animatedElements.forEach(el => { observer.observe(el); });
+        });
+
+        // Interactivity for Checklist
+        const checklists = document.querySelectorAll('.checklist');
+        checklists.forEach(list => {
+            list.addEventListener('change', (event) => {
+                if (event.target.type === 'checkbox') {
+                    const listItem = event.target.closest('li');
+                    if (listItem) {
+                        const labelSpan = listItem.querySelector('span');
+                        if (labelSpan) {
+                            // Optional: Add visual feedback beyond strikethrough
+                            // listItem.style.opacity = event.target.checked ? '0.6' : '1'; 
+                        }
+                    }
+                }
+            });
+            // Initial state based on browser cache (optional)
+            list.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const labelSpan = checkbox.closest('li').querySelector('span');
+                if (labelSpan) {
+                    // No initial styling change, keep it clean
+                    // labelSpan.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
+                    // labelSpan.style.color = checkbox.checked ? '#6c757d' : 'inherit';
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
